@@ -8,7 +8,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
- *
+ * Keeps a hash set of cursors. Makes sure to release cursors as soon as
+ * respective finger is lifted off.
+ * 
  * @author Michael Kipp
  */
 public class TouchGui extends Application {
@@ -42,8 +44,10 @@ public class TouchGui extends Application {
         });
 
         scene.setOnTouchReleased(e -> {
-            TouchCursor c = id2cursor.get(e.getTouchPoint().getId());
+            TouchCursor c = id2cursor.remove(e.getTouchPoint().getId());
             c.setVisible(false);
+            root.getChildren().remove(c);
+            //System.out.println("cursors: " + id2cursor.size());
         });
 
         stage.setTitle("TouchGui");
@@ -51,6 +55,7 @@ public class TouchGui extends Application {
         stage.setOnCloseRequest(e -> {
             Platform.exit();
         });
+        stage.setFullScreen(true);
         stage.show();
     }
 
